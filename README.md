@@ -1,1 +1,1 @@
-# Stimulator
+# Simulator
