@@ -24,6 +24,9 @@ import functions as op
     "jgt":"11101",
     "je":"11111",
     "hlt":"11010",
+    "addf": "10000",
+    "subf:  "10001",
+    "movf": "10010",
 }
 reg={
     "r0":"000",
@@ -126,6 +129,91 @@ def typef(ins):
     zeroes="0"*11
     st+=zeroes
     return st
+
+#
+# Q3. Floating point operations
+#
+def typea_float(ins,machine_c,variables):
+    st = ""
+    bb=using_op[ins[0]]
+    st += bb
+    st += "00"
+    if ins[1][0] != "flags" and ins[1][1]!="flags" and ins[1][2]!="flags":
+        try:
+            st += using_reg[ins[1][0]]
+        except:
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)+len(variables)}: invalid register")
+            return  st       
+        try:
+            st += using_reg[ins[1][1]]
+        except:
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: invalid register")
+            return  st 
+        try: 
+            st += using_reg[ins[1][2]]
+            return st
+        except: 
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: invalid register")
+            return  st 
+    else:
+        st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: entered register is a flag")    
+        return  st 
+def typeb_float(ins,machine_c,variables):
+    st=""
+    if(ins[0]=="mov"):
+        st += using_op[ins[0]][0]
+    else:
+        st += using_op[ins[0]]
+    st += "0"
+    if(op.check_reg(ins[1][0],using_reg)):
+        st += using_reg[ins[1][0]]
+        st +=op.float_to_binary(int(ins[1][1][1:]),8)
+    else:
+        st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: Register Invalid")  
+    return st
+#
+#
+#
+
+#
+# Q4. bonus instruction
+#
+def b_ins1(ins,machine_c,variables):
+    st = ""
+    bb=using_op[ins[0]]
+    st += bb
+    st += "00"
+    if ins[1][0] != "flags" and ins[1][1]!="flags" and ins[1][2]!="flags":
+        try:
+            st += using_reg[ins[1][0]]
+        except:
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)+len(variables)}: invalid register")
+            return  st       
+        try:
+            st += using_reg[ins[1][1]]
+        except:
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: invalid register")
+            return  st 
+        try: 
+            st += using_reg[ins[1][2]]
+            return st
+        except: 
+            st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: invalid register")
+            return  st 
+    else:
+        st = (f"Error in line {machine_c.index(ins)+1+len(variables)}: entered register is a flag")    
+        return  st 
+def b_ins2(ins):
+    return
+def b_ins3(ins):
+    return
+def b_ins4(ins):
+    return
+def b_ins5(ins):
+    return
+#
+#
+#
 
 # __________________new______________
 

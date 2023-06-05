@@ -9,28 +9,33 @@ def blank_factors(string):
     return string
 
 # creates a dictionary with opcodes and there corresponding opeartions for initial stage 
-def extract(filename):
+
+def ins_return(filename):
     f=open(filename,"rt")
     set_string=f.read()
     f.close()
-    net_matrix=set_string.split("\n\n\n")
-    return net_matrix
+    intruction_set=[]
+    if(set_string==""):
+        emp=[]
+        return emp
+    set_string=blank_factors(set_string)
+    set_string=set_string
+    for i in set_string.split("\n"):
+        if(i == ''):
+            continue
+        temp_list=i.split()
+        intruction_set.append([temp_list[0],temp_list[1:]])
+    return intruction_set
 
-def ins_return(filename):
-    n_string=extract(filename)
-    master_record=[]
-    for set_string in n_string:
-        intruction_set=[]
-        if(set_string==""):
-            emp=[]
-            return emp
-        set_string=blank_factors(set_string)
-        set_string=set_string.lower()
-        for i in set_string.split("\n"):
-            temp_list=i.split()
-            intruction_set.append([temp_list[0],temp_list[1:]])
-        master_record.append(intruction_set)
-    return master_record
+#takes input from terminal
+def split_input(num_list):
+    intruction_set=[]
+    for i in num_list:
+        if(i == ''):
+            continue
+        temp_list=i.split()
+        intruction_set.append([temp_list[0],temp_list[1:]])
+    return intruction_set
 
 # creates a 7-bit binary string 
 def to_binary(n, m):
@@ -71,17 +76,15 @@ def prg_mem(dict_name):
         mem_id=to_binary(i,7)
         mem_reserve.append([mem_id,""])
     return mem_reserve
-f=ins_return("Tech.txt")
-g=prg_mem(f)
 #creates a dictianary of labels
-def ad_dict(prg_dict,machine_dict):
+def ad_dict(prg_dict,machine_dict,vars):
     mac=[i[0] for i in prg_dict]
     ad=[i[0] for i in machine_dict]
     count=len(mac)
     new_dict={}
     for i in range(count):
         if(":" in mac[i]):
-            new_dict[mac[i][:-1]]=ad[i]
+            new_dict[mac[i][:-1]]=ad[i-len(vars)]
     return new_dict
 
 #creates a dictionary of variables
@@ -133,8 +136,6 @@ def check_lab(labels,lab):
 
 # funtion to check registers
 def check_reg(reg,regs):
-    if(reg=="flags"):
-        return False
     for i in regs.keys():
         if i == reg:
             return True
@@ -157,6 +158,6 @@ def check_halt(main_program):
     return False
 # function to write machine code in a text file
 def write_machine(filename,machine_code):
-    f=open(filename,"at")
+    f=open(filename,"wt")
     f.write(machine_code)
     f.close()
