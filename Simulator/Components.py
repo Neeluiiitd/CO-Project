@@ -69,7 +69,7 @@ class EE:
             self.pc=pc
             self.memory=mem
             self.regs=reg
-            self.op_ls={"typeA" : [] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
+            self.op_ls={"typeA" : ["add",""] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
     def typeA(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # ditionary of regs
