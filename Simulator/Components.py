@@ -73,37 +73,30 @@ class EE:
     def typeA(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # ditionary of regs
-        return
     
     def typeB(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return
     
     def typeC(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return
     
     def typeD(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return
     
     def typeE(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return
     
     def typeFA(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return
     
     def typeFB(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-        return 
     
     def execute(self,instruction):
         return
