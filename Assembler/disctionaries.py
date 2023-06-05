@@ -18,6 +18,9 @@ op_code={
     "jgt":"11101",
     "je":"11111",
     "hlt":"11010",
+    "addf": "10000",
+    "subf": "10001",
+    "movf": "10010",
 }
 reg={
     "r0":"000",
@@ -40,5 +43,9 @@ typeC=["div","cmp","mov","not"]
 typeD=["ld","st"]
 
 typeE=["jmp","jlt","lgt","je"]
+
+typeFA=["addf","subf"] 
+
+typeFB=["movf"] 
 
 typeF=["hlt"]

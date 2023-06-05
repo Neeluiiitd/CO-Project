@@ -2,6 +2,7 @@ f=open("input",'r')
 a=f.readlines()
 # print(a)
 machine_code=[]
+"""
 # __________________________IMPORT________________________
 import Dictionaries as dic
 import Functions as func
@@ -56,4 +57,4 @@ for i in machine_code:
             print(f'000000000{dic.reg["000"]} 000000000{dic.reg["001"]} 000000000{dic.reg["010"]} 000000000{dic.reg["011"]} 000000000{dic.reg["100"]} 000000000{dic.reg["101"]} 000000000{dic.reg["110"]} 000000000{dic.reg["111"]} ')
 
 
-# print(dic.reg)
+# print(dic.reg)"""

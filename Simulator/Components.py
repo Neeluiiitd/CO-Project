@@ -1,15 +1,21 @@
 class RF:
     def __init__(self):
         self.registers = {
-        "000": {"r0" : ""},
-        "001": {"r1" : ""},
-        "010": {"r2" : ""},
-        "011": {"r3" : ""},
-        "100": {"r4" : ""},
-        "101": {"r5" : ""},
-        "110": {"r6" : ""},
-        "111": {"flags" : ""},
+        "000": "",
+        "001": "",
+        "010": "",
+        "011": "",
+        "100": "",
+        "101": "",
+        "110": "",
+        "111": "",
         }
+    def __str__(self):
+        return f" r0:{self.registers['000']}, r1:{self.registers['001']}, r2:{self.registers['010']}, r3:{self.registers['011']}, r4:{self.registers['100']}, r5:{self.registers['101']}, r6:{self.registers['110']}, flags:{self.registers['111']}"
+    def add_val(self,val,reg):
+        self.registers[val]=reg
+    def add_reg_content(self,r1,r2):
+        self.registers[r1]=self.registers[r2]
 
 def int_to_7bit_binary(number):
   binary_string = bin(number)[2:]
@@ -27,13 +33,15 @@ class MEM:
 class PC:
     def __init__(self):
         self.value = 0
+        self.link_reg = "0000000"
         self.address = int_to_7bit_binary(self.value)
     def increment(self):
         self.value +=1
         self.address = int_to_7bit_binary(self.value)
-        
+    def update_counter(self,value):
+        self.link_reg=value
 class EE:
-    def __init__(self):
+    def __init__(self,pc,mem,reg):
             self.op_codes = {
             "00000": "add",
             "00001": "sub",
@@ -55,7 +63,30 @@ class EE:
             "11101": "jgt",
             "11111": "je",
             "11010": "hlt",
-            }
+            "10000": "addf",
+            "10001": "subf",
+            "10010": "movf",}
+            self.pc=pc
+            self.memory=mem
+            self.regs=reg
+            self.op_ls={"typeA" : [] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
+    def typeA(self,instruction):
+        return
+    
+    def typeB(self,instruction):
+        return
+    
+    def typeC(self,instruction):
+        return
+    
+    def typeD(self,instruction):
+        return
+    
+    def typeE(self,instruction):
+        return
+    
+    def execute(self,instruction):
+        return
     """def decode_execute(self,code):
         for i in code:
             if (i[:5])=="00010":

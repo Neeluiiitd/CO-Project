@@ -64,6 +64,8 @@ if(toexit == False):
     d=dic.typeD
     e=dic.typeE
     f=dic.typeF
+    fa=dic.typeFA
+    fb=dic.typeFB
     program_counter=0
     set_of_mcode=[]
     set_of_errors=[]
@@ -153,7 +155,40 @@ if(toexit == False):
                         set_of_errors.append(net_str)
                     program_counter+=1
                     
+            if(i[0] in fa):
+                    if(len(i[1])!=3):
+                        set_of_errors.append(f"Error at line {main_program.index(i)+1+len(variables)}: invalid number of arguments")
+                        set_of_mcode.append("FC")
+                        continue
+                    net_str=op.typea(i,main_program,variables)
+                    if(net_str.isnumeric()):
+                        set_of_mcode.append(net_str)
+                    else:
+                        set_of_mcode.append("FC")
+                        set_of_errors.append(net_str)
+                    program_counter+=1
                     
+            elif(i[0] in fb):
+                    if(len(i[1])!=2):
+                        set_of_errors.append(f"Error at line {main_program.index(i)+1+len(variables)}: invalid number of arguments")
+                        set_of_mcode.append("FC")
+                        continue
+                    #edited part
+                    temp_num = int(i[1][1][1:])
+                    # handling illegal immediate values, only 7 bit binary values are allowed
+                    if  temp_num <0 or temp_num>127:
+                        set_of_errors.append(f"Error in line {main_program.index(i)+1}: Imm must be a whole number: range (0-127)")
+                        net_str="FC"
+                        set_of_mcode.append(net_str)
+                        continue
+                    net_str=op.typeb(i,main_program,variables)
+                    if(net_str.isnumeric()):
+                        set_of_mcode.append(net_str)
+                    else:
+                        set_of_mcode.append("FC")
+                        set_of_errors.append(net_str)
+                    program_counter+=1
+        
             elif(i[0] in f):
                     net_str=op.typef(i)
                     set_of_mcode.append(net_str)
