@@ -1,14 +1,14 @@
 class RF:
     def __init__(self):
         self.registers = {
-        "000": "",
-        "001": "",
-        "010": "",
-        "011": "",
-        "100": "",
-        "101": "",
-        "110": "",
-        "111": "",
+        "000": "0000000000000000",
+        "001": "0000000000000000",
+        "010": "0000000000000000",
+        "011": "0000000000000000",
+        "100": "0000000000000000",
+        "101": "0000000000000000",
+        "110": "0000000000000000",
+        "111": "0000000000000000",
         }
     def __str__(self):
         return f" r0:{self.registers['000']}, r1:{self.registers['001']}, r2:{self.registers['010']}, r3:{self.registers['011']}, r4:{self.registers['100']}, r5:{self.registers['101']}, r6:{self.registers['110']}, flags:{self.registers['111']}"
@@ -71,19 +71,39 @@ class EE:
             self.regs=reg
             self.op_ls={"typeA" : [] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
     def typeA(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # ditionary of regs
         return
     
     def typeB(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
         return
     
     def typeC(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
         return
     
     def typeD(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
         return
     
     def typeE(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
         return
+    
+    def typeFA(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
+        return
+    
+    def typeFB(self,instruction):
+        op_dict=self.op_codes # dictionary of op_codes
+        registers=self.regs # dictionary of regs
+        return 
     
     def execute(self,instruction):
         return
