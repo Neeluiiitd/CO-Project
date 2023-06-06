@@ -73,7 +73,46 @@ class EE:
     def typeA(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # ditionary of regs
+        if instruction[0:4]=="00000": #addition
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            registers.add_reg_content(r1, r2)
+            registers.add_val(r3, registers.registers[r1] + registers.registers[r2])
+
+            
+        if instruction[0:4]=="00110":   #multiplication
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            registers.add_reg_content(r1, r2)
+            registers.add_val(r3, registers.registers[r1] * registers.registers[r2])
+        if instruction[0:4]=="00001":   #subtraction
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            registers.add_reg_content(r1, r2)
+            registers.add_val(r3, registers.registers[r1]-registers.registers[r2])  
+        if instruction[0:4]=="01010":   #XOR
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            registers.add_reg_content(r1, r2)
+            registers.add_val(r3, registers.registers[r1] ^ registers.registers[r2])
+        if instruction[0:4]=="01100":   #AND
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            registers.add_reg_content(r1, r2)
+            registers.add_val(r3, registers.registers[r1] & registers.registers[r2])         
+
+           
+
+
     
+
+
+
     def typeB(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
