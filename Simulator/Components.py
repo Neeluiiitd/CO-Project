@@ -205,12 +205,14 @@ class EE:
         
     def typeD(self,instruction):
         registers=self.regs # dictionary of regs
+        
         if(instruction[:5]=="00100"):
             value = self.memory.memory[instruction[9:]]
             registers.mov_val(instruction[6:9],value)
         if(instruction[:5]=="00101"):    
-            value = self.regs.fetch_val[instruction[9:]]
-            registers.mov_val(instruction[6:9],value)
+            value = self.regs.fetch_val[instruction[6:9]]
+            self.memory[instruction[9:]]=value
+            
     def typeE(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
