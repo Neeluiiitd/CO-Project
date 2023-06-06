@@ -23,7 +23,20 @@ def int_to_7bit_binary(number):
     binary_string = "0" * (7 - len(binary_string)) + binary_string
 
   return binary_string
-        
+
+def binaryToDecimal(n):
+    num = n
+    dec_value = 0
+    base = 1
+    temp = num
+    while(temp):
+        last_digit = temp % 10
+        temp = int(temp / 10)
+         
+        dec_value += last_digit * base
+        base = base * 2
+    return dec_value
+
 class MEM:
     def __init__(self):
         self.memory = {}
@@ -116,11 +129,66 @@ class EE:
     def typeB(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-    
+
+        if (i[:5])=="00010":#mov reg1 imm
+            # mov reg1 #imm
+            # i[7:9]- reg   i[-7:]- value to be moved
+            self.regs[i[6:9]]= i[-7:]
+
+        if (i[:5])=="01000":#rs reg1 imm
+        # i[7:9]- reg   i[-7:]- value to be moved
+            str=""
+            str+=self.regs[i[-7:-4]]
+            str=str[:-1]
+            str="0"+ str
+            self.regs[i[7:9]]=str
+
+        if (i[:5])=="01001":#ls reg imm
+        # i[7:9]- reg   i[-7:]- value to be moved
+            str=""
+            str+=self.regs[i[-7:-4]]
+            str=str[1:]
+            str+="0"
+            self.regs[i[7:9]]=str
+
+
     def typeC(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-    
+
+        if (i[:5])=="00011":#mov reg1 reg2
+        # i[-7:-4]- reg1    i[-3:]- reg2
+            self.regs[i[-7:-4]]=self.reg[i[-3:]]
+
+        if (i[:5])=="00111":#div reg1 reg2
+            if self.regs[i[-3:]]=="0":
+                self.regs["000"]="0"
+                self.regs["001"]="0"
+                self.regs["111"]="000000000001000"
+            else:
+                self.regs["000"]=(self.regs[i[-7:-4]])//(self.regs[i[-3:]])
+                self.regs["001"]=(self.regs[i[-7:-4]])%(self.regs[i[-3:]])
+
+        if (i[:5])=="01101":#not reg1 reg2
+        # i[-7:-4]- reg1/3   i[-3:]- reg2/4
+            a=self.regs[i[-3:]]
+            a=binaryToDecimal(a)
+            a=~a
+            self.regs[i[-3:]]=int_to_7bit_binary(a)
+
+        if (i[:5])=="01110":#cmp reg1 reg2
+        # i[-7:-4]- reg1/3   i[-3:]- reg2/4
+            if self.regs[i[-7:-4]]<self.reg[i[-3:]]:
+                self.regs["111"]="000000000000100"
+                print(f'000000000{self.regs["000"]} 000000000{self.regs["001"]} 000000000{self.regs["010"]} 000000000{self.regs["011"]} 000000000{self.regs["100"]} 000000000{self.regs["101"]} 000000000{self.regs["110"]} 000000000{self.regs["111"]} ')
+
+            if self.regs[i[-7:-4]]>self.regs[i[-3:]]:
+                self.regs["111"]="000000000000010"
+                print(f'000000000{self.regs["000"]} 000000000{self.regs["001"]} 000000000{self.regs["010"]} 000000000{self.regs["011"]} 000000000{self.regs["100"]} 000000000{self.regs["101"]} 000000000{self.regs["110"]} 000000000{self.regs["111"]} ')
+
+            if self.regs[i[-7:-4]]==self.regs[i[-3:]]:
+                self.regs["111"]="000000000000001"
+
     def typeD(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
