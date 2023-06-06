@@ -48,7 +48,7 @@ class PC:
     def update_counter(self,value):
         self.link_reg=value
 class EE:
-    def __init__(self,pc,mem,reg):
+    def __init__(self):
             self.op_codes = {
             "00000": "add",
             "00001": "sub",
@@ -73,17 +73,22 @@ class EE:
             "10000": "addf",
             "10001": "subf",
             "10010": "movf",}
-            self.pc=pc
-            self.memory=mem
-            self.regs=reg
+            self.pc=PC()
+            self.memory=MEM()
+            self.regs=RF()
             self.op_ls={"typeA" : ["add",""] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
     def typeA(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
-        registers=self.regs # ditionary of regs
+        
+        registers=self.regs # ditionary of regs / all registers
+        registry = registers.registers
+        # main dictionary  resigitry "000" : "0000000000000000"  
         if instruction[0:4]=="00000": #addition
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
+            #self.regs.mov_val()
+            registers.mov_valt
             registers.add_reg_content(r1, r2)
             registers.add_val(r3, registers.registers[r1] + registers.registers[r2])
 
