@@ -14,13 +14,13 @@ for i in a:
 # for i in machine_code:
 #     print(i)
 """
-10101010010 lable : myloop
-10101010010 add
-10101010010 sub
-10101010010 mul
-10101010010 jmp myloop
-10101010010
-10101010010
+00000000001 lable : myloop smp
+00000000010 add
+00000000011 sub
+00000000100 mul
+00000000101 jmp myloop
+00000000001 cmp
+00000000010 add
 """
 halt=False #altered
 pc_dict={} #altered

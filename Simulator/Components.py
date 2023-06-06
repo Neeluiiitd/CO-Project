@@ -39,49 +39,23 @@ class MEM:
             
 class PC:
     def __init__(self):
-        self.value = 0
+        self.value = "0000000"
         self.link_reg = "0000000"
         self.address = int_to_7bit_binary(self.value)
     def increment(self):
-        self.value +=1
+        value = binary_to_int(self.value)+1
+        self.value = int_to_7bit_binary(value)
         self.address = int_to_7bit_binary(self.value)
     def update_counter(self,value):
-        self.link_reg=value
+        self.link_reg=self.value
+        self.value=value
 class EE:
     def __init__(self):
-            self.op_codes = {
-            "00000": "add",
-            "00001": "sub",
-            "00110": "mul",
-            "00111": "div",
-            "01010": "xor",
-            "01011": "or",
-            "01100": "and",
-            "01101": "not",
-            "01110": "cmp",
-            "00010": "mov",
-            "00011": "mov",
-            "00100": "ld",
-            "00101": "st",
-            "01000": "rs",
-            "01001": "ls",
-            "01111": "jmp",
-            "11100": "jlt",
-            "11101": "jgt",
-            "11111": "je",
-            "11010": "hlt",
-            "10000": "addf",
-            "10001": "subf",
-            "10010": "movf",}
             self.pc=PC()
             self.memory=MEM()
             self.regs=RF()
-            self.op_ls={"typeA" : ["add",""] , "typeB" : [] ,"typeC" : [] ,"typeD" : [] ,"typeE" : [], "typeF" : []}
     def typeA(self,instruction):
-        op_dict=self.op_codes # dictionary of op_codes
-        
         registers=self.regs # ditionary of regs / all registers
-        registry = registers.registers
         # main dictionary  resigitry "000" : "0000000000000000"  
         if instruction[0:4]=="00000": #addition
             r1=instruction[7:10] # adress of registers
@@ -223,20 +197,41 @@ class EE:
         if(instruction[:5]=="00101"):    
             value = self.regs.fetch_val[instruction[9:]]
             registers.mov_val(instruction[6:9],value)
+
     def typeE(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
-    
+        
+        if (instruction[:5])=="01111": # jmp to mem_addr -> Type E
+            # pc = pc_value()
+            self.pc.update_counter(instruction[-7:])
+        if (instruction[:5])=="11100": # jlt to mem_addr -> Type E
+            if registers.registers["111"] =="000000000000100":
+                self.pc.update_counter(instruction[-7:])
+            
+        if (instruction[:5])=="11101": # jgt to mem_addr -> Type E
+            if registers.registers["111"] =="000000000000010":
+                self.pc.update_counter(instruction[-7:])
+            
+        if (instruction[:5])=="11111": # je to mem_addr -> Type E
+            if registers.registers["111"] =="000000000000001":
+                self.pc.update_counter(instruction[-7:])
+                
     def typeFA(self,instruction):
-        op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
     
     def typeFB(self,instruction):
-        op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
     
     def execute(self,instruction):
-        return
+        self.typeA(instruction)
+        self.typeB(instruction)
+        self.typeC(instruction)
+        self.typeD(instruction)
+        self.typeE(instruction)
+        self.typeFA(instruction)
+        self.typeFB(instruction)
+        self.pc.increment()
     """def decode_execute(self,code):
         for i in code:
             if (i[:5])=="00010":
