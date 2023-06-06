@@ -87,6 +87,7 @@ class EE:
             r1=instruction[7:10] # adress of registers
             r2=instruction[10:13]
             r3=instruction[13:16]
+            flag="111"
 
             #self.regs.mov_val()
             #a=registers.fetch_val(r2)
@@ -95,8 +96,12 @@ class EE:
             #int_to_7bit_binary(R3)
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
-            registers.mov_val(r3,int_to_7bit_binary(a+b)) #moves binary no to r3
-
+            if a+b>=2**16:
+                registers.mov_val(r1,"0000000")
+                registers.mov_val(flag,"00000000000010000")
+            else:
+                registers.mov_val(r3,int_to_7bit_binary(a+b)) #moves binary no to r3
+            
 
             
             
@@ -108,12 +113,19 @@ class EE:
            
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
-            registers.mov_val(r3,int_to_7bit_binary(a*b)) #moves binary no to r3
+            if a*b>=2**16:
+                registers.mov_val(r1,"0000000")
+
+                registers.mov_val(flag,"00000000000010000")
+            else:
+                registers.mov_val(r3,int_to_7bit_binary(a*b)) #moves binary no to r3
+            
             
         if instruction[0:4]=="00001":   #subtraction
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
+            flag="111"
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
             if a-b<0:
@@ -205,14 +217,12 @@ class EE:
         
     def typeD(self,instruction):
         registers=self.regs # dictionary of regs
-        
         if(instruction[:5]=="00100"):
             value = self.memory.memory[instruction[9:]]
             registers.mov_val(instruction[6:9],value)
         if(instruction[:5]=="00101"):    
-            value = self.regs.fetch_val[instruction[6:9]]
-            self.memory[instruction[9:]]=value
-            
+            value = self.regs.fetch_val[instruction[9:]]
+            registers.mov_val(instruction[6:9],value)
     def typeE(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
