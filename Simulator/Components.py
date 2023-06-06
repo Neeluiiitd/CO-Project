@@ -12,11 +12,13 @@ class RF:
         }
     def __str__(self):
         return f" r0:{self.registers['000']}, r1:{self.registers['001']}, r2:{self.registers['010']}, r3:{self.registers['011']}, r4:{self.registers['100']}, r5:{self.registers['101']}, r6:{self.registers['110']}, flags:{self.registers['111']}"
-    def add_val(self,val,reg):
-        self.registers[val]=reg
-    def add_reg_content(self,r1,r2):
-        self.registers[r1]=self.registers[r2]
+    
+    def fetch_val(self,reg):
+        return self.registers[reg]
 
+    def mov_val(self,reg,data):
+        self.registers[reg]=data
+        
 def int_to_7bit_binary(number):
   binary_string = bin(number)[2:]
   if len(binary_string) < 7:
@@ -24,18 +26,10 @@ def int_to_7bit_binary(number):
 
   return binary_string
 
-def binaryToDecimal(n):
-    num = n
-    dec_value = 0
-    base = 1
-    temp = num
-    while(temp):
-        last_digit = temp % 10
-        temp = int(temp / 10)
-         
-        dec_value += last_digit * base
-        base = base * 2
-    return dec_value
+def binary_to_int(binary_string):
+    binary_string = binary_string.zfill(7)  # Ensure the binary string has 7 bits
+    decimal_number = int(binary_string, 2)
+    return decimal_number
 
 class MEM:
     def __init__(self):
@@ -118,13 +112,6 @@ class EE:
             r3=instruction[13:16]
             registers.add_reg_content(r1, r2)
             registers.add_val(r3, registers.registers[r1] & registers.registers[r2])         
-
-           
-
-
-    
-
-
 
     def typeB(self,instruction):
         op_dict=self.op_codes # dictionary of op_codes
