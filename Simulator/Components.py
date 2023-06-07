@@ -1,3 +1,4 @@
+import Functions as fn
 class RF:
     def __init__(self):
         self.registers = {
@@ -237,10 +238,47 @@ class EE:
                 
     def typeFA(self,instruction):
         registers=self.regs # dictionary of regs
+        if instruction[0:5]=="10001": #addition
+            r1=instruction[7:10] # adress of registers
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            flag="111"
+
+            #self.regs.mov_val()
+            #a=registers.fetch_val(r2)
+            #b=registers.fetch_val(r3)
+            #R3=a+b
+            #int_to_7bit_binary(R3)
+            b=fn.binary_to_float(registers.fetch_val(r3))  #INTERGER VALUE of register 3
+            a=fn.binary_to_float(registers.fetch_val(r2))
+            if a+b>=7.9:
+                registers.mov_val(r1,"0000000000000000")
+                registers.mov_val(flag,"00000000000010000")
+            else:
+                registers.mov_val(r1,fn.float_to_binary(a+b)) #moves binary no to r3                
+        if instruction[0:5]=="10010":   #subtraction
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            flag="111"
+            b=fn.binary_to_float(registers.fetch_val(r3))  #INTERGER VALUE of register 3
+            a=fn.binary_to_float(registers.fetch_val(r2))
+            if a-b<0.125:
+                registers.mov_val(r1,"0000000000000000")
+
+                registers.mov_val(flag,"00000000000010000")
+
+
+            else:
+                registers.mov_val(r1,fn.float_to_binary(a-b)) #moves binary no to r3
     
     def typeFB(self,instruction):
         registers=self.regs # dictionary of regs
-    
+        if (instruction[:5])=="00010":#mov reg1 imm
+            # mov reg1 #imm
+            # i[7:9]- reg   i[-7:]- value to be moved
+            r=instruction[6:9]
+            registers.mov_val(r,instruction[9:]+8*"0")
     def execute(self,instruction):
         self.typeA(instruction)
         self.typeB(instruction)

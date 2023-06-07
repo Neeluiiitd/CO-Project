@@ -160,7 +160,7 @@ if(toexit == False):
                         set_of_errors.append(f"Error at line {main_program.index(i)+1+len(variables)}: invalid number of arguments")
                         set_of_mcode.append("FC")
                         continue
-                    net_str=op.typea(i,main_program,variables)
+                    net_str=op.typea_float(i,main_program,variables)
                     if(net_str.isnumeric()):
                         set_of_mcode.append(net_str)
                     else:
@@ -174,14 +174,14 @@ if(toexit == False):
                         set_of_mcode.append("FC")
                         continue
                     #edited part
-                    temp_num = int(i[1][1][1:])
+                    temp_num = float(i[1][1][1:])
                     # handling illegal immediate values, only 7 bit binary values are allowed
-                    if  temp_num <0 or temp_num>127:
-                        set_of_errors.append(f"Error in line {main_program.index(i)+1}: Imm must be a whole number: range (0-127)")
+                    if  temp_num <0.125 or temp_num>7.9:
+                        set_of_errors.append(f"Error in line {main_program.index(i)+1}: Imm must be a whole number: range (0.125-)")
                         net_str="FC"
                         set_of_mcode.append(net_str)
                         continue
-                    net_str=op.typeb(i,main_program,variables)
+                    net_str=op.typeb_float(i,main_program,variables)
                     if(net_str.isnumeric()):
                         set_of_mcode.append(net_str)
                     else:

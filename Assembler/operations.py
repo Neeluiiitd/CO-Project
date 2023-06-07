@@ -164,7 +164,6 @@ def typeb_float(ins,machine_c,variables):
         st += using_op[ins[0]][0]
     else:
         st += using_op[ins[0]]
-    st += "0"
     if(op.check_reg(ins[1][0],using_reg)):
         st += using_reg[ins[1][0]]
         st +=op.float_to_binary(int(ins[1][1][1:]),8)
