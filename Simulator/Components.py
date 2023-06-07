@@ -11,7 +11,7 @@ class RF:
         "111": "0000000000000000",
         }
     def __str__(self):
-        return f" r0:{self.registers['000']}, r1:{self.registers['001']}, r2:{self.registers['010']}, r3:{self.registers['011']}, r4:{self.registers['100']}, r5:{self.registers['101']}, r6:{self.registers['110']}, flags:{self.registers['111']}"
+        return f"{self.registers['000']}\t{self.registers['001']}\t{self.registers['010']}\t{self.registers['011']}\t{self.registers['100']}\t{self.registers['101']}\t{self.registers['110']}\t{self.registers['111']}"
     
     def fetch_val(self,reg):
         return self.registers[reg]
@@ -23,41 +23,56 @@ def int_to_7bit_binary(number):
   binary_string = bin(number)[2:]
   if len(binary_string) < 7:
     binary_string = "0" * (7 - len(binary_string)) + binary_string
+  return binary_string
 
+def int_to_16bit_binary(number):
+  binary_string = bin(number)[2:]
+  if len(binary_string) < 16:
+    binary_string = "0" * (16 - len(binary_string)) + binary_string
   return binary_string
 
 def binary_to_int(binary_string):
-    binary_string = binary_string.zfill(7)  # Ensure the binary string has 7 bits
+    binary_string = binary_string.zfill(16)  # Ensure the binary string has 16 bits
     decimal_number = int(binary_string, 2)
     return decimal_number
 
 class MEM:
-    def __init__(self):
+    def __init__(self,program):
         self.memory = {}
+        self.program=program
         for i in range(128):
-            self.memory[int_to_7bit_binary(i)] = ""
-            
+            self.memory[int_to_7bit_binary(i)] = "0000000000000000"
+    def store_the_program(self):
+        for i in range(len(self.program)):
+            self.memory[int_to_7bit_binary(i)] = self.program[i]
+    def __str__(self):
+        ls=[]
+        for i in self.memory.values():
+            ls.append(i)
+        n_str="\n".join(ls)
+        return n_str
 class PC:
     def __init__(self):
-        self.value = "0000000"
+        self.value = 0
         self.link_reg = "0000000"
         self.address = int_to_7bit_binary(self.value)
     def increment(self):
-        value = binary_to_int(self.value)+1
-        self.value = int_to_7bit_binary(value)
+        self.value += 1
         self.address = int_to_7bit_binary(self.value)
     def update_counter(self,value):
         self.link_reg=self.value
         self.value=value
+    def __str__(self):
+        return self.address
 class EE:
-    def __init__(self):
+    def __init__(self,program):
             self.pc=PC()
-            self.memory=MEM()
+            self.memory=MEM(program)
             self.regs=RF()
     def typeA(self,instruction):
         registers=self.regs # ditionary of regs / all registers
         # main dictionary  resigitry "000" : "0000000000000000"  
-        if instruction[0:4]=="00000": #addition
+        if instruction[0:5]=="00000": #addition
             r1=instruction[7:10] # adress of registers
             r2=instruction[10:13]
             r3=instruction[13:16]
@@ -71,15 +86,11 @@ class EE:
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
             if a+b>=2**16:
-                registers.mov_val(r1,"0000000")
+                registers.mov_val(r1,"0000000000000000")
                 registers.mov_val(flag,"00000000000010000")
             else:
-                registers.mov_val(r3,int_to_7bit_binary(a+b)) #moves binary no to r3
-            
-
-            
-            
-        if instruction[0:4]=="00110":   #multiplication
+                registers.mov_val(r1,int_to_16bit_binary(a+b)) #moves binary no to r3            
+        if instruction[0:5]=="00110":   #multiplication
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
@@ -88,14 +99,14 @@ class EE:
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
             if a*b>=2**16:
-                registers.mov_val(r1,"0000000")
+                registers.mov_val(r1,"0000000000000000")
 
                 registers.mov_val(flag,"00000000000010000")
             else:
-                registers.mov_val(r3,int_to_7bit_binary(a*b)) #moves binary no to r3
+                registers.mov_val(r1,int_to_16bit_binary(a*b)) #moves binary no to r3
             
             
-        if instruction[0:4]=="00001":   #subtraction
+        if instruction[0:5]=="00001":   #subtraction
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
@@ -103,17 +114,17 @@ class EE:
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
             if a-b<0:
-                registers.mov_val(r1,"0000000")
+                registers.mov_val(r1,"0000000000000000")
 
                 registers.mov_val(flag,"00000000000010000")
 
 
             else:
-                registers.mov_val(r3,int_to_7bit_binary(a-b)) #moves binary no to r3
+                registers.mov_val(r1,int_to_16bit_binary(a-b)) #moves binary no to r3
 
         
              
-        if instruction[0:4]=="01010":   #XOR
+        if instruction[0:5]=="01010":   #XOR
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
@@ -121,13 +132,21 @@ class EE:
             a=binary_to_int(registers.fetch_val(r2))
             registers.mov_val(r3,int_to_7bit_binary(a^b)) #moves binary no to r3
             
-        if instruction[0:4]=="01100":   #AND
+        if instruction[0:5]=="01100":   #AND
             r1=instruction[7:10]
             r2=instruction[10:13]
             r3=instruction[13:16]
             b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
             a=binary_to_int(registers.fetch_val(r2))
-            registers.mov_val(r3,int_to_7bit_binary(a&b)) #moves binary no to r3
+            registers.mov_val(r3,int_to_16bit_binary(a&b)) #moves binary no to r3
+        
+        if instruction[0:5]=="01011":   #OR
+            r1=instruction[7:10]
+            r2=instruction[10:13]
+            r3=instruction[13:16]
+            b=binary_to_int(registers.fetch_val(r3))  #INTERGER VALUE of register 3
+            a=binary_to_int(registers.fetch_val(r2))
+            registers.mov_val(r3,int_to_16bit_binary(a|b)) #moves binary no to r3
                    
 
     def typeB(self,instruction):
@@ -136,7 +155,7 @@ class EE:
             # mov reg1 #imm
             # i[7:9]- reg   i[-7:]- value to be moved
             r=instruction[6:9]
-            registers.mov_val(r,instruction[-7:])
+            registers.mov_val(r,int_to_16bit_binary(binary_to_int(instruction[-7:])))
             
         if (instruction[:5])=="01000":#rs reg1 imm
         # i[7:9]- reg   i[-7:]- value to be moved
@@ -144,7 +163,7 @@ class EE:
             r1 = instruction[6:9]
             r = registers.fetch_val(instruction[6:9])
             r = binary_to_int(r)
-            registers.mov_val(r1,int_to_7bit_binary(r<<v))
+            registers.mov_val(r1,int_to_16bit_binary(r<<v))
             
         if (instruction[:5])=="01001":#ls reg imm
         # i[7:9]- reg   i[-7:]- value to be moved
@@ -152,7 +171,7 @@ class EE:
             r1 = instruction[6:9]
             r = registers.fetch_val(instruction[6:9])
             r = binary_to_int(r)
-            registers.mov_val(r1,int_to_7bit_binary(r<<v))
+            registers.mov_val(r1,int_to_16bit_binary(r<<v))
 
     def typeC(self,instruction):
         registers=self.regs # dictionary of regs
@@ -167,8 +186,8 @@ class EE:
                 self.regs.registers["001"]="000000000000000"
                 self.regs.registers["111"]="000000000001000"
             else:
-                self.regs.registers["000"]=int_to_7bit_binary(binary_to_int(self.regs[instruction[-7:-4]])//binary_to_int(self.regs[instruction[-3:]]))
-                self.regs.registers["001"]=int_to_7bit_binary(binary_to_int(self.regs[instruction[-7:-4]])%binary_to_int(self.regs[instruction[-3:]]))
+                self.regs.registers["000"]=int_to_16bit_binary(binary_to_int(self.regs[instruction[-7:-4]])//binary_to_int(self.regs[instruction[-3:]]))
+                self.regs.registers["001"]=int_to_16bit_binary(binary_to_int(self.regs[instruction[-7:-4]])%binary_to_int(self.regs[instruction[-3:]]))
 
         if (instruction[:5])=="01101":#not reg1 reg2
         # i[-7:-4]- reg1/3   i[-3:]- reg2/4
@@ -195,11 +214,10 @@ class EE:
             value = self.memory.memory[instruction[9:]]
             registers.mov_val(instruction[6:9],value)
         if(instruction[:5]=="00101"):    
-            value = self.regs.fetch_val[instruction[9:]]
-            registers.mov_val(instruction[6:9],value)
+            value = registers.fetch_val(instruction[6:9])
+            self.memory.memory[instruction[9:]]=value
 
     def typeE(self,instruction):
-        op_dict=self.op_codes # dictionary of op_codes
         registers=self.regs # dictionary of regs
         
         if (instruction[:5])=="01111": # jmp to mem_addr -> Type E
@@ -231,7 +249,6 @@ class EE:
         self.typeE(instruction)
         self.typeFA(instruction)
         self.typeFB(instruction)
-        self.pc.increment()
     """def decode_execute(self,code):
         for i in code:
             if (i[:5])=="00010":
