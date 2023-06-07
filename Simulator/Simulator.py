@@ -7,10 +7,10 @@ import sys
 arg=[]
 while True:
     try:
-        stdin=input()
-        arg.append(stdin)
+        g=input()
     except:
-         break
+        break
+    arg.append(g)
 #ls=sys.stdin.
 
 ee=cpu.EE(arg)
@@ -22,9 +22,11 @@ mem.store_the_program()
 while(True):
     instruction=mem.memory[pc.address]
     if(instruction[:5]=="11010"):
+        print(pc,end="        ")
+        print(fr,end="\n")
         break
     ee.execute(instruction)
-    print(pc,end="\t")
+    print(pc,end="        ")
     print(fr,end="\n")
     pc.increment()
 print(mem)
