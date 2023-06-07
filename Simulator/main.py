@@ -2,16 +2,18 @@ import Components as cpu
 import sys
 
 # Create a list to store the input lines
-lines = []
 
 # Loop over the input lines
-for line in sys.stdin:
-    if(line=="\n"):
-        break
-    line = line.strip()
-    lines.append(line)
+arg=[]
+while True:
+    try:
+        stdin=input()
+        arg.append(stdin)
+    except:
+         break
+#ls=sys.stdin.
 
-ee=cpu.EE(lines)
+ee=cpu.EE(arg)
 pc=ee.pc
 fr=ee.regs
 mem=ee.memory
